@@ -1,3 +1,25 @@
-<h>
-    Login
-</h>
+
+    <html>
+<head>
+
+</head>
+
+<body>
+
+    <form action="{% url 'login' %}" method="post">{% csrf_token %}
+
+        <input type = "email" placeholder="Email..." name="email">
+        <br>
+        <br>
+        <input type = "password" placeholder="Senha..." name="senha">
+        <br>
+        <br>
+        <input type = "submit"  value="logar">
+        <br>
+
+   </form>
+
+</body>
+
+
+</html>
