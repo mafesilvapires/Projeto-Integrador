@@ -1,5 +1,5 @@
 """
-ASGI config for config_educa project.
+ASGI config for config_app project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

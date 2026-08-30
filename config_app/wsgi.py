@@ -1,5 +1,5 @@
 """
-WSGI config for config_educa project.
+WSGI config for config_app project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
