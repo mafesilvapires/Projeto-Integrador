@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'authenticate_user'
+    'authenticate_user',
+    'axes'
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+        'axes.backends.AxesStandaloneBackend',
+        'django.contrib.auth.backends.ModelBackend',
 ]
 
 ROOT_URLCONF = 'config_app.urls'
@@ -138,3 +145,8 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# Parâmetros de Axes (rate_limit)
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 1
+AXES_LOCKOUT_PARAMETERS = ["username", "ip_address"]
