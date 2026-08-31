@@ -185,3 +185,90 @@ input.campo-pin:focus {
 .link-cadastro:hover {
     text-decoration: underline;
 }
+
+/* estilos pop-up */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background-color: #ffffff;
+  padding: 24px 32px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 360px;
+  width: 90%;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-title {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #333333;
+  font-size: 1.25rem;
+}
+
+.modal-message {
+  color: #d9534f;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.btn-fechar {
+  background-color: #0d6efd;
+  color: #ffffff;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-fechar:hover {
+  background-color: #0b5ed7;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Home */
+.card-boas-vindas {
+    background-color: #ffffff;
+    padding: 28px 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    max-width: 500px;
+}
+
+.card-boas-vindas h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.card-boas-vindas .saudacao {
+    font-size: 1rem;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.card-boas-vindas .status-autenticado {
+    font-size: 0.9rem;
+    color: #10b981;
+    font-weight: 500;
+}
