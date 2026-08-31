@@ -1,0 +1,274 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+.login-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.painel-visual {
+    flex: 1;
+}
+
+.painel-formulario {
+    flex: 1;
+    background-color: #0073e6;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-formulario {
+    background-color: white;
+    width: 100%;
+    max-width: 360px;
+    border-radius: 16px;
+    padding: 32px;
+}
+
+.cabecalho-card {
+    margin-bottom: 24px;
+}
+
+.cabecalho-card h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.cabecalho-card p {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+}
+
+.rotulo-oculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.campo-forms {
+    display: flex;
+    align-items: center;
+    border: 1px solid #dcdfe3;
+    border-radius: 50px;
+    padding: 12px 20px;
+    margin-bottom: 12px;
+}
+
+.campo-forms input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: #333333;
+}
+
+.icone-campo {
+    font-size: 20px;
+    color: #8c98a4;
+    margin-right: 12px;
+}
+
+.botao-esqueci-senha {
+    margin-bottom: 16px;
+}
+
+.link-esqueci-a-senha {
+    font-size: 12px;
+    color: #4a4a4a;
+    text-decoration: none;
+}
+
+.link-esqueci-a-senha:hover {
+    text-decoration: underline;
+}
+
+.campo-termos {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-left: 4px;
+}
+
+.campo-termos label {
+    font-size: 12px;
+    color: #4a4a4a;
+    cursor: pointer;
+}
+
+.link-termos {
+    color: #0073e6;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.checkbox-termos {
+    cursor: pointer;
+    accent-color: #0073e6;
+}
+
+.grupo-pin {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+input.campo-pin {
+    width: 48px !important;
+    height: 48px !important;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #0073e6;
+    border: 1.5px solid #d0e3ff;
+    background-color: #f4f8ff;
+    border-radius: 12px;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+input.campo-pin:focus {
+    border-color: #0073e6;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 115, 230, 0.15);
+}
+
+.botao-entrar {
+    width: 100%;
+    padding: 14px;
+    background-color: #0073e6;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.botao-entrar:hover {
+    background-color: #005bb5;
+}
+
+.rodape-card {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.rodape-card p {
+    font-size: 12px;
+    color: #4a4a4a;
+}
+
+.link-cadastro {
+    color: #0073e6;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.link-cadastro:hover {
+    text-decoration: underline;
+}
+
+/* estilos pop-up */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background-color: #ffffff;
+  padding: 24px 32px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 360px;
+  width: 90%;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-title {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #333333;
+  font-size: 1.25rem;
+}
+
+.modal-message {
+  color: #d9534f;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.btn-fechar {
+  background-color: #0d6efd;
+  color: #ffffff;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-fechar:hover {
+  background-color: #0b5ed7;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Home */
+.card-boas-vindas {
+    background-color: #ffffff;
+    padding: 28px 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    max-width: 500px;
+}
+
+.card-boas-vindas h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.card-boas-vindas .saudacao {
+    font-size: 1rem;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.card-boas-vindas .status-autenticado {
+    font-size: 0.9rem;
+    color: #10b981;
+    font-weight: 500;
+}
