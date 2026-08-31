@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as auth_login
 
-
 # Create your views here.
 def cadastro(request):
     if request.method == "GET":
@@ -27,7 +26,6 @@ def cadastro(request):
 
     return HttpResponse("Usuário cadastrado com sucesso")
 
-
 def login(request):
     if request.method == "GET":
         return render(request, 'login.html')
@@ -43,10 +41,10 @@ def login(request):
 
     if user is not None:
         auth_login(request, user)
-        return redirect("home")
+        return redirect("plataforma")
 
     return HttpResponse("Usuário ou senha inválidos")
 
 @login_required
-def home(request):
+def plataforma(request):
     return render(request, "home.html")
