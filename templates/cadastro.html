@@ -1,27 +1,79 @@
-<html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Hub - Crie sua conta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/thin/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/light/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/duotone/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
+    <div class="login-container">
+        <div class="painel-visual">
+            <!-- Espaço reservado para ilustração -->
+        </div>
 
-    <form action="{% url 'cadastro' %}" method="post">{% csrf_token %}
+        <div class="painel-formulario">
+            <div class="card-formulario">
+                
+                <div class="cabecalho-card">
+                    <h1>Crie sua conta</h1>
+                    <p>Acesse diversas funcionalidades!</p>
+                </div>
 
-        <input type = "text" placeholder="Username..." name="username">
-        <br>
-        <br>
-        <input type = "email" placeholder="Email..." name="email">
-        <br>
-        <br>
-        <input type = "password" placeholder="Senha..." name="senha">
-        <br>
-        <br>
-        <input type = "submit"  value="Cadastrar">
-        <br>
+                <form action="{% url 'cadastro' %}" method="post" class="credenciais">
+                    {% csrf_token %}
+                    
+                    <div class="campo-forms">
+                        <i class="ph ph-user icone-campo"></i>
+                        <label for="campo-nome" class="rotulo-oculto">Nome completo</label>
+                        <input type="text" id="campo-nome" placeholder="Nome completo" name="username" required>
+                    </div>
 
-   </form>
+                    <div class="campo-forms">
+                        <i class="ph ph-envelope-simple icone-campo"></i>
+                        <label for="campo-email" class="rotulo-oculto">Endereço de e-mail</label>
+                        <input type="email" id="campo-email" placeholder="Endereço de e-mail" name="email" required>
+                    </div>
 
+                    <div class="campo-forms">
+                        <i class="ph ph-lock-key icone-campo"></i>
+                        <label for="campo-senha" class="rotulo-oculto">Senha</label>
+                        <input type="password" id="campo-senha" placeholder="Senha" name="senha" required>
+                    </div>
+
+                    <div class="campo-forms">
+                        <i class="ph ph-lock-key icone-campo"></i>
+                        <label for="campo-confirma-senha" class="rotulo-oculto">Confirme sua senha</label>
+                        <input type="password" id="campo-confirma-senha" placeholder="Confirme sua senha" name="confirma_senha" required>
+                    </div>
+
+                    <div class="campo-termos">
+                        <input type="checkbox" id="termos" class="checkbox-termos" required>
+                        <label for="termos">Aceito os <a href="#" class="link-termos">termos e condições</a></label>
+                    </div>
+
+                    <button type="submit" class="botao-entrar">Cadastrar</button>
+
+                    <div class="rodape-card">
+                        <p>Já tem uma conta? <a href="{% url 'login' %}" class="link-cadastro">Entre agora</a></p>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
 </body>
-
-
 </html>
