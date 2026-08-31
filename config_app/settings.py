@@ -150,3 +150,10 @@ MAILERS = {
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = 1
 AXES_LOCKOUT_PARAMETERS = ["username", "ip_address"]
+
+# Parâmetros de sessão
+SESSION_COOKIE_AGE = 900
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Definindo URL de Login
+LOGIN_URL = 'login'
