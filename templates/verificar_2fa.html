@@ -1,0 +1,6 @@
+<h2>Digite o código do seu app autenticador</h2>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="codigo" placeholder="Código de 6 dígitos">
+    <button type="submit">Confirmar</button>
+</form>
