@@ -1,15 +1,23 @@
+{% load static %}
 <!DOCTYPE html>
-
-<html lang="pt-BR"><head>
+<html lang="pt-BR">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Hub - Verifique seu e-mail</title>
+    <title>Teacher Hub - Verificação em Duas Etapas</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/thin/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/light/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/duotone/style.css">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/thin/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/light/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/duotone/style.css">
+    
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
@@ -22,24 +30,28 @@
             <div class="card-formulario">
                 
                 <div class="cabecalho-card">
-                    <h1>Verifique seu e-mail</h1>
-                    <p>Nós enviamos um código para<br><strong>nome@email.com</strong></p>
+                    <h1>Verificação em duas etapas</h1>
+                    <p>Abra seu aplicativo autenticador e insira o código de 6 dígitos.</p>
                 </div>
 
-                <form class="credenciais">
+                <form action="#" method="post" class="credenciais" id="form-verificacao">
+                    {% csrf_token %}
                     
+                    <input type="hidden" name="token_2fa" id="token-2fa">
+
                     <div class="grupo-pin">
-                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric">
-                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric">
-                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric">
-                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric">
-                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric">
+                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric" required>
+                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric" required>
+                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric" required>
+                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric" required>
+                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric" required>
+                        <input type="text" maxlength="1" class="campo-pin" placeholder="—" inputmode="numeric" required>
                     </div>
 
-                    <button type="submit" class="botao-entrar">Enviar</button>
+                    <button type="submit" class="botao-entrar">Confirmar</button>
 
                     <div class="rodape-card">
-                        <p>Não recebeu o código? <a href="#" class="link-cadastro">Enviar novamente</a></p>
+                        <p>Perdeu acesso ao app? <a href="#" class="link-cadastro">Usar código de recuperação</a></p>
                     </div>
 
                 </form>
@@ -47,6 +59,32 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const form = document.getElementById('form-verificacao');
+        const pinInputs = document.querySelectorAll('.campo-pin');
+        const tokenInput = document.getElementById('token-2fa');
+
+        form.addEventListener('submit', () => {
+            let token = '';
+            pinInputs.forEach(input => token += input.value);
+            tokenInput.value = token;
+        });
+
+        pinInputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                if (input.value && index < pinInputs.length - 1) {
+                    pinInputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && index > 0) {
+                    pinInputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
