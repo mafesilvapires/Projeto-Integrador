@@ -1,14 +1,13 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User 
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as login_django
 from django.contrib.auth.decorators import login_required
 import pyotp
 import qrcode
 import io
 import base64
 from .models import PerfilTOTP
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
 
 def cadastro(request):
@@ -73,13 +72,20 @@ def verificar_2fa(request):
 
         if totp.verify(codigo):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login_django(request, user)
+            auth_login(request, user)
             del request.session['pre_2fa_user_id']
-            return HttpResponse("autenticação correta")
+            return redirect("plataforma")
         else:
             return HttpResponse("código inválido")
 
 
 @login_required(login_url="/auth/login")
 def plataforma(request):
-    return HttpResponse('você esta logado')
+    return render(request, 'home.html',{
+        'user': request.user
+    })
+
+def logout(request):
+    auth_logout(request)
+    messages.info(request, "Você foi desconectado com sucesso")
+    return redirect('login')
