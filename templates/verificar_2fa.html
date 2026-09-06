@@ -1,6 +1,142 @@
-<h2>Digite o código do seu app autenticador</h2>
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="codigo" placeholder="Código de 6 dígitos">
-    <button type="submit">Confirmar</button>
-</form>
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Hub - Verificação em Duas Etapas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/forms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/buttons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/auth.css' %}">
+</head>
+
+<body>
+    <div class="login-container">
+
+        <div class="painel-visual"></div>
+
+        <div class="painel-formulario">
+            <div class="card-formulario">
+
+                <div class="cabecalho-card">
+                    <h1>Código de segurança</h1>
+                    <p>
+                        Insira o código de 6 números do seu app autenticador.
+                    </p>
+                </div>
+
+                <form method="post" class="credenciais" id="form-verificacao">
+
+                    {% csrf_token %}
+
+                    <!--Campo oculto que será enviado para o Django-->
+                    <input type="hidden" name="codigo" id="codigo">
+
+                    <div class="grupo-pin">
+
+                        <input
+                            type="text"
+                            placeholder="-"
+                            maxlength="1"
+                            class="campo-pin"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            required
+                        >
+
+                        <input
+                            type="text"
+                            placeholder="-"
+                            maxlength="1"
+                            class="campo-pin"
+                            inputmode="numeric"
+                            required
+                        >
+
+                        <input
+                            type="text"
+                            placeholder="-"
+                            maxlength="1"
+                            class="campo-pin"
+                            inputmode="numeric"
+                            required
+                        >
+
+                        <input
+                            type="text"
+                            placeholder="-"
+                            maxlength="1"
+                            class="campo-pin"
+                            inputmode="numeric"
+                            required
+                        >
+
+                        <input
+                            type="text"
+                            placeholder="-"
+                            maxlength="1"
+                            class="campo-pin"
+                            inputmode="numeric"
+                            required
+                        >
+
+                        <input
+                            type="text"
+                            placeholder="-"
+                            maxlength="1"
+                            class="campo-pin"
+                            inputmode="numeric"
+                            required
+                        >
+
+                    </div>
+
+                    <button type="submit" class="botao-entrar">
+                        Confirmar
+                    </button>
+
+                    <!--<div class="rodape-card">
+                        <p>
+                            Perdeu acesso ao app?
+                            <a href="#" class="link-cadastro">
+                                Usar código de recuperação
+                            </a>
+                        </p>
+                    </div>
+                    -->
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                Swal.fire({
+                    text: '{{ message }}',
+                    confirmButtonColor: '#0070f3',
+                    confirmButtonText: 'Tentar novamente'
+                });
+            </script>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Script do PIN -->
+    <script src="{% static 'js/pages/login.js' %}"></script>
+
+</body>
+</html>

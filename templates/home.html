@@ -10,8 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
-
-    <!-- CSS Modularizado -->
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
 </head>
@@ -21,10 +21,13 @@
         <aside class="sidebar">
             <div class="sidebar-conteudo"></div>
             <div class="sidebar-rodape">
-                <a href="{% url 'logout' %}" class="btn-logout">
-                    <i class="ph ph-sign-out icone-logout"></i>
-                    <span>Fazer Log Out</span>
-                </a>
+                <form action="{% url 'logout' %}" method="post" class="form-logout">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">
+                        <i class="ph ph-sign-out icone-logout"></i>
+                        <span>Fazer Log Out</span>
+                    </button>
+                </form>
             </div>
         </aside>
         <main class="main-content">
