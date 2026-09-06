@@ -160,6 +160,33 @@ AXES_LOCKOUT_PARAMETERS = ["username", "ip_address"]
 SESSION_COOKIE_AGE = 900
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+# Definindo sistema de logs 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        "padrao":{
+            'format': '{asctime} {levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers':{
+        'arquivo':{
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'acesso.log',
+        },
+    },
+    'loggers':{
+        'authenticate_user': {
+            'handlers': ['arquivo'],
+            'level': 'INFO',
+            'propagate': True
+        },
+    },
+}
+
+
 # Definindo URL de Login
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = "plataforma"
