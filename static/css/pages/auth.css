@@ -25,8 +25,13 @@
     padding: 32px;
 }
 
+.card-formulario--centralizado {
+    text-align: center;
+}
+
 .cabecalho-card {
     margin-bottom: 24px;
+    text-align: left;
 }
 
 .cabecalho-card h1 {
@@ -39,6 +44,12 @@
 .cabecalho-card p {
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
+}
+
+.cabecalho-card .instrucoes {
+    font-size: 14px;
+    color: #4a4a4a;
+    margin-top: 8px;
 }
 
 .botao-esqueci-senha {
@@ -65,6 +76,14 @@
     color: #4a4a4a;
 }
 
+.rodape-card--compacto {
+    margin-top: 24px;
+}
+
+.rodape-card--sem-margem {
+    margin-top: 0;
+}
+
 .link-cadastro {
     color: #0073e6;
     font-weight: 500;
@@ -73,4 +92,23 @@
 
 .link-cadastro:hover {
     text-decoration: underline;
+}
+
+/* Elementos do QR Code */
+.caixa-qrcode {
+    height: 160px;
+    width: 160px;
+    padding: 4px;
+    border: 1px solid #0073e6;
+    border-radius: 12px;
+    display: inline-block;
+    background-color: #ffffff;
+}
+
+.img-qrcode {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 4px;
 }

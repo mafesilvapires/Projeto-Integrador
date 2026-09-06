@@ -49,17 +49,17 @@
 .grupo-pin {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
     margin: 24px 0;
 }
 
 .campo-pin {
-    width: 46px;
-    height: 52px;
+    width: 44px;
+    height: 44px;
     font-size: 1.3rem;
     font-weight: 600;
     text-align: center;
-    border: 1.5px solid #e5e7eb;
+    border: 2px solid #e5e7eb;
     border-radius: 12px;
     color: #111827;
     background-color: #f9fafb;
@@ -67,8 +67,26 @@
     transition: all 0.2s ease;
 }
 
+.campo-pin::placeholder {
+    color: #B0B0B0;
+}
+
 .campo-pin:focus {
     border-color: #0070f3;
     background-color: #ffffff;
     box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.15);
+}
+
+.mensagens-erro {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: -6px;
+    margin-bottom: 12px;
+    padding-left: 8px;
+}
+
+.mensagem-alerta {
+    color: #ef4444;
+    font-size: 14px;
+    margin-bottom: 20px;
 }
