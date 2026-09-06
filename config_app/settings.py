@@ -140,7 +140,7 @@ STATIC_URL = 'static/'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
+EMAIL_BACKEND = {
     'default': {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
@@ -157,3 +157,5 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Definindo URL de Login
 LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = "plataforma"
+LOGOUT_REDIRECT_URL = "login"
