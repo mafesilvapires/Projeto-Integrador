@@ -9,6 +9,9 @@
     border-radius: 50px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
 }
 
 .botao-entrar:hover {
@@ -29,4 +32,8 @@
 
 .btn-fechar:hover {
     background-color: #0b5ed7;
+}
+
+.botao-espacado {
+    margin-top: 8px;
 }

@@ -1,6 +1,48 @@
-<h1>Seu cadastro foi concluído<h1>
-
-
-<h2>Escaneie o QR code no seu app autenticador</h2>
-<img src="data:image/png;base64,{{ qr_base64 }}">
-<a href="{% url 'login' %}">Já configurei, ir para login</a>
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Hub - Configurar Autenticador</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/buttons.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="painel-visual"></div>
+        <div class="painel-formulario">
+            <div class="card-formulario card-formulario--centralizado">
+                <div class="cabecalho-card">
+                    <h1>Quase lá! Vamos proteger sua conta?</h1>
+                    <p class="instrucoes">
+                        Aumente a segurança da sua conta.<br><br>
+                        <b>1.</b> Abra seu aplicativo de autenticação (Google Authenticator, Microsoft ou outro de sua preferência).<br>
+                        <b>2.</b> Aponte a câmera do celular para escanear o QR Code abaixo.
+                    </p>
+                </div>
+                <div class="caixa-qrcode">
+                    <img 
+                        src="data:image/png;base64,{{ qr_base64 }}" 
+                        alt="QR Code de autenticação em duas etapas" 
+                        class="img-qrcode"
+                    >
+                </div>
+                <div class="rodape-card rodape-card--compacto">
+                    <a href="{% url 'login' %}" class="botao-entrar">
+                        Entrar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
