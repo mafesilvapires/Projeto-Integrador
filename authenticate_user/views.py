@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib import messages
 
 
-logger = logging.getLogger('authenticat_user')
+logger = logging.getLogger('authenticate_user')
 
 
 def cadastro(request):
@@ -70,13 +70,9 @@ def login(request):
             request.session['pre_2fa_user_id'] = user.id
             return redirect('verificar_2fa')
         else:
-<<<<<<< Updated upstream
-            messages.error(request, 'E-mail ou senha inválidos. Tente novamente.')
-            return redirect('login')
-=======
-            logger.warning(f"tentativa falaha de acesso - usuario: {username} - IP: {request.META.get('REMOTE_ADDR')}")
-            return HttpResponse("email ou senha inválidos")
->>>>>>> Stashed changes
+            logger.warning(f"tentativa falha de acesso - usuario: {username} - IP: {request.META.get('REMOTE_ADDR')}")
+            messages.erro(request, 'E-mail ou senha inválidos.')
+            return redirect('login') 
 
 
 def verificar_2fa(request):
