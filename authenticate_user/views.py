@@ -5,9 +5,14 @@ import pyotp
 import qrcode
 import io
 import base64
+import logging
 from .models import PerfilTOTP
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
+
+
+logger = logging.getLogger('authenticate_user')
+
 
 def cadastro(request):
     if request.method == "GET":
@@ -61,11 +66,13 @@ def login(request):
         user = authenticate(request, username=username, password=senha)
 
         if user:
+            logger.info(f"login - usuario: {username} - IP: {request.META.get('REMOTE_ADDR')}")
             request.session['pre_2fa_user_id'] = user.id
             return redirect('verificar_2fa')
         else:
-            messages.error(request, 'E-mail ou senha inválidos. Tente novamente.')
-            return redirect('login')
+            logger.warning(f"tentativa falha de acesso - usuario: {username} - IP: {request.META.get('REMOTE_ADDR')}")
+            messages.erro(request, 'E-mail ou senha inválidos.')
+            return redirect('login') 
 
 
 def verificar_2fa(request):
