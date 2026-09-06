@@ -1,0 +1,67 @@
+.topbar {
+    height: 60px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.layout-body {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+.sidebar {
+    width: 240px;
+    background-color: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 16px;
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ef4444;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.btn-logout:hover {
+    opacity: 0.8;
+}
+
+.main-content {
+    flex: 1;
+    padding: 32px;
+    background-color: #f9fafb;
+}
+
+.card-boas-vindas {
+    background-color: #ffffff;
+    padding: 28px 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    max-width: 500px;
+}
+
+.card-boas-vindas h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.card-boas-vindas .saudacao {
+    font-size: 1rem;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.card-boas-vindas .status-autenticado {
+    font-size: 0.9rem;
+    color: #10b981;
+    font-weight: 500;
+}

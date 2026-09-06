@@ -6,22 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Hub - Home</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-</head>
 
+    <!-- CSS Modularizado -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+</head>
 <body>
     <header class="topbar"></header>
-
     <div class="layout-body">
-
         <aside class="sidebar">
-            <div class="sidebar-conteudo">
-            </div>
-
+            <div class="sidebar-conteudo"></div>
             <div class="sidebar-rodape">
                 <a href="{% url 'logout' %}" class="btn-logout">
                     <i class="ph ph-sign-out icone-logout"></i>
@@ -29,7 +27,6 @@
                 </a>
             </div>
         </aside>
-
         <main class="main-content">
             <div class="card-boas-vindas">
                 <h1>Área Autenticada</h1>

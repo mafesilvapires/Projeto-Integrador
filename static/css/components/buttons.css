@@ -1,0 +1,32 @@
+.botao-entrar {
+    width: 100%;
+    padding: 14px;
+    background-color: #0073e6;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.botao-entrar:hover {
+    background-color: #005bb5;
+}
+
+.btn-fechar {
+    background-color: #0d6efd;
+    color: #ffffff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-fechar:hover {
+    background-color: #0b5ed7;
+}
