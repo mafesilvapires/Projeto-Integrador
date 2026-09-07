@@ -9,9 +9,26 @@ import logging
 from .models import PerfilTOTP
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
-
+from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
 
 logger = logging.getLogger('authenticate_user')
+
+class PasswordResetViewLog(PasswordResetView):
+    def form_valid(self, form):
+        email = form.cleaned_data.get('email')
+        logger.info(f"Solicitacao de recuperacao de senha - email: {email} - IP: {self.request.META.get('REMOTE_ADDR')}")
+        return super().form_valid(form)
+
+
+class PasswordResetConfirmViewLog(PasswordResetConfirmView):
+    def form_valid(self, form):
+        logger.info(f"Redefinicao de senha concluida com sucesso - usuario: {form.user.username} - IP: {self.request.META.get('REMOTE_ADDR')}")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        logger.warning(f"Tentativa de redefinicao de senha invalida - IP: {self.request.META.get('REMOTE_ADDR')}")
+        return super().form_invalid(form)
+
 
 
 def cadastro(request):
