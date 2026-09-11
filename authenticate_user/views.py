@@ -10,6 +10,7 @@ from .models import PerfilTOTP
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
+from .crypto import criptografar_dado, descriptografar_dado
 
 logger = logging.getLogger('authenticate_user')
 
@@ -28,7 +29,6 @@ class PasswordResetConfirmViewLog(PasswordResetConfirmView):
     def form_invalid(self, form):
         logger.warning(f"Tentativa de redefinicao de senha invalida - IP: {self.request.META.get('REMOTE_ADDR')}")
         return super().form_invalid(form)
-
 
 
 def cadastro(request):
@@ -51,7 +51,8 @@ def cadastro(request):
         user = User.objects.create_user(username=username, email=email, password=senha)
 
         secret = pyotp.random_base32()
-        PerfilTOTP.objects.create(user=user, secret=secret)
+        secret_cifrado = criptografar_dado(secret)
+        PerfilTOTP.objects.create(user=user, secret=secret_cifrado)
 
         return redirect('qrcode', username=username)
 
@@ -64,7 +65,8 @@ def qrcode_2fa(request, username):
         messages.error(request, 'Usuário não encontrado.')
         return redirect('login')
 
-    uri = pyotp.totp.TOTP(perfil.secret).provisioning_uri(name=user.username, issuer_name="Teacher Hub")
+    secret_puro = descriptografar_dado(perfil.secret)
+    uri = pyotp.totp.TOTP(secret_puro).provisioning_uri(name=user.username, issuer_name="Teacher Hub")
 
     img = qrcode.make(uri)
     buffer = io.BytesIO()
@@ -88,7 +90,7 @@ def login(request):
             return redirect('verificar_2fa')
         else:
             logger.warning(f"tentativa falha de acesso - usuario: {username} - IP: {request.META.get('REMOTE_ADDR')}")
-            messages.erro(request, 'E-mail ou senha inválidos.')
+            messages.error(request, 'E-mail ou senha inválidos.')
             return redirect('login') 
 
 
@@ -96,7 +98,6 @@ def verificar_2fa(request):
     if request.method == "GET":
         return render(request, 'verificar_2fa.html')
     else:
-        # Lê o campo 'codigo' do form simples ou 'token_2fa' do form de 6 pinos
         codigo = request.POST.get('codigo') or request.POST.get('token_2fa')
         user_id = request.session.get('pre_2fa_user_id')
 
@@ -111,7 +112,8 @@ def verificar_2fa(request):
             messages.error(request, 'Usuário ou perfil não encontrado.')
             return redirect('login')
 
-        totp = pyotp.TOTP(perfil.secret)
+        secret_puro = descriptografar_dado(perfil.secret)
+        totp = pyotp.TOTP(secret_puro)
 
         if codigo and totp.verify(codigo):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
