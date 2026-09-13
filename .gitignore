@@ -21,6 +21,20 @@ db.sqlite3
 # PyCharm
 .idea/
 
+#Logs
+logs
+/log
+log
+logs/
+
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# Certificados HTTPS & TLS
+*.key
+*.crt
+*.pem
+cert.crt
+cert.key
+cert.pem
