@@ -196,3 +196,26 @@ LOGOUT_REDIRECT_URL = "login"
 #Parâmetros de site e token de redefinição
 SITE_ID = 1
 PASSWORD_RESET_TIMEOUT = 3600
+
+# Configurações de comunicação segura (para produção)
+# Verificando o parâmetro que diz se estamos em produção ou desenvolvimento
+IS_PRODUCTION = os.getenv('APP_STATE') == 'production'
+
+if IS_PRODUCTION:
+    # Parâmetros para produção
+    INSTALLED_APPS += ['django_extensions']
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 3600 # Curto para desenvolvimento com segurança
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True # Terá efeito ao aumentar o SECURE_HSTS_SECONDS para um ano no mínimo
+    DEBUG = True # ATENÇÃO A EQUIPE, mantive o debug True para a produção pois ainda não estamos realizando o deploy, isso permite o funcionamento dos arquivos estáticos, precisamos ajustar isso OBRIGATORIAMENTE no momento do deploy
+    ALLOWED_HOSTS = ['projetointegrador.com', '127.0.0.1', 'localhost']
+else:
+    # Parâmetros durante desenvolvimento
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
