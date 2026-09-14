@@ -1,4 +1,4 @@
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 from decouple import config
 
 # busca a chave criptográfica no .env
@@ -15,4 +15,7 @@ def descriptografar_dado(texto_cifrado: str) -> str:
     """Recebe a sopa de letrinhas cifrada e devolve o texto original."""
     if not texto_cifrado:
         return texto_cifrado
-    return fernet.decrypt(texto_cifrado.encode()).decode()
+    try:
+        return fernet.decrypt(texto_cifrado.encode()).decode()
+    except (InvalidToken, Exception):
+        return texto_cifrado
