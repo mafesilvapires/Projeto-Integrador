@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Compliance</title>
+</head>
+<body>
+
+    <h1>Meus Dados</h1>
+
+    <p>Olá {{ user.username }} Nesse setor você pode verificar seus dados!</p>
+
+    <a href="{% url 'my_data' %}">Consultar Meus Dados</a>
+    <br>
+    <a href="{% url 'export_my_data' %}">Exportar Meus Dados</a>
+    <br>
+    <a href="{% url 'delete_account' %}">Deletar Minha Conta</a>
+
+</body>
+</html>

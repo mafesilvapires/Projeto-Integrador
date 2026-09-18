@@ -35,6 +35,13 @@
                 <h1>Área Autenticada</h1>
                 <p class="saudacao">Olá, <strong>{{ user.username }}</strong></p>
                 <p class="status-autenticado">Você foi autenticado.</p>
+                <br>
+                <br>
+                <form action="{% url 'compliance_home' %}" method="get" class="form-compliance">
+                    <button type="submit" class="btn-compliance">
+                        <span>Meus Dados</span>
+                    </button>
+                </form>
             </div>
         </main>
     </div>

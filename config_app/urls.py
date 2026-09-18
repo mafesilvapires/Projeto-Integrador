@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('authenticate_user.urls')),
     path('', lambda request: redirect('auth/cadastro')),
+    path('compliance/', include('compliance.urls')),
 ]

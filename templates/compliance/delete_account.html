@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Deletar conta</title>
+</head>
+<body>
+
+    <h1>Deletar Minha Conta</h1>
+
+    <p>Você acessou a área de deleção de cadastro.</p>
+
+    <p>
+        Tem certeza que deseja apagar seu usuário?
+        Essa escolha não poderá ser revertida.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Deletar meu usuário</button>
+    </form>
+
+    <br>
+
+    <a href="{% url 'compliance_home' %}">Cancelar</a>
+
+</body>
+</html>

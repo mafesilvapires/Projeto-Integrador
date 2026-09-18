@@ -38,3 +38,8 @@ Thumbs.db
 cert.crt
 cert.key
 cert.pem
+root-ca.key
+root-ca.srl
+server.crt
+server.csr
+server.key
