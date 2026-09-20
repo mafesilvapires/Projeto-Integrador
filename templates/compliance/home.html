@@ -1,20 +1,115 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Compliance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Hub - Privacidade e Dados</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/compliance.css' %}">
 </head>
 <body>
+    <header class="topbar">
+        <div class="topbar-brand">
+            <span>Teacher Hub</span>
+        </div>
+        <div class="topbar-user">
+            <i class="ph ph-user-circle"></i>
+            <span>{{ user.username }}</span>
+        </div>
+    </header>
 
-    <h1>Meus Dados</h1>
+    <div class="layout-body">
+        <aside class="sidebar">
+            <nav class="sidebar-conteudo">
+                <ul class="nav-lista">
+                    <li>
+                        <a href="{% url 'plataforma' %}" class="nav-item">
+                            <i class="ph ph-squares-four icone-nav"></i>
+                            <span>Início</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'compliance:compliance_home' %}" class="nav-item ativo">
+                            <i class="ph ph-shield-check icone-nav"></i>
+                            <span>Privacidade e Dados</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
-    <p>Olá {{ user.username }} Nesse setor você pode verificar seus dados!</p>
+            <div class="sidebar-rodape">
+                <form action="{% url 'logout' %}" method="post" class="form-logout">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">
+                        <i class="ph ph-sign-out icone-logout"></i>
+                        <span>Fazer Log Out</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
 
-    <a href="{% url 'my_data' %}">Consultar Meus Dados</a>
-    <br>
-    <a href="{% url 'export_my_data' %}">Exportar Meus Dados</a>
-    <br>
-    <a href="{% url 'delete_account' %}">Deletar Minha Conta</a>
+        <main class="main-content">
+            <div class="compliance-container">
+                <div class="compliance-cabecalho">
+                    <a href="{% url 'plataforma' %}" class="link-voltar">
+                        <i class="ph ph-arrow-left"></i>
+                        <span>Voltar ao painel principal</span>
+                    </a>
+                    <h1>Central de Privacidade e LGPD</h1>
+                    <p class="subtitulo-compliance">Gerencie seus dados pessoais, termos de consentimento e portabilidade de forma autônoma e segura.</p>
+                </div>
 
+                <div class="cards-grid">
+                    <!-- Card 1: Consultar Dados -->
+                    <div class="card-opcao">
+                        <div class="icone-wrapper icone-azul">
+                            <i class="ph ph-user-gear"></i>
+                        </div>
+                        <h3>Meus Dados e Consentimentos</h3>
+                        <p>Consulte as informações associadas ao seu cadastro, status de segurança e termo de uso aceito.</p>
+                        <a href="{% url 'compliance:my_data' %}" class="btn-acao btn-primario">
+                            <span>Acessar Meus Dados</span>
+                            <i class="ph ph-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <!-- Card 2: Exportar Dados -->
+                    <div class="card-opcao">
+                        <div class="icone-wrapper icone-verde">
+                            <i class="ph ph-download-simple"></i>
+                        </div>
+                        <h3>Portabilidade de Dados</h3>
+                        <p>Baixe uma cópia estruturada de todos os seus dados e registros de atividade vinculados à plataforma em formato JSON.</p>
+                        <a href="{% url 'compliance:export_my_data' %}" class="btn-acao btn-secundario">
+                            <span>Exportar Dados</span>
+                            <i class="ph ph-download"></i>
+                        </a>
+                    </div>
+
+                    <!-- Card 3: Excluir Conta -->
+                    <div class="card-opcao card-perigo">
+                        <div class="icone-wrapper icone-vermelho">
+                            <i class="ph ph-trash"></i>
+                        </div>
+                        <h3>Encerramento de Conta</h3>
+                        <p>Solicite a revogação de acessos e a eliminação definitiva dos seus dados dos nossos servidores.</p>
+                        <a href="{% url 'compliance:delete_account' %}" class="btn-acao btn-perigo">
+                            <span>Excluir Minha Conta</span>
+                            <i class="ph ph-warning-circle"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

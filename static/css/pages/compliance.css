@@ -1,0 +1,156 @@
+.compliance-container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.link-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: color 0.15s ease;
+}
+
+.link-voltar:hover {
+    color: #0073e6;
+}
+
+.compliance-cabecalho h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 8px 0;
+}
+
+.subtitulo-compliance {
+    font-size: 1rem;
+    color: #4b5563;
+    margin: 0 0 32px 0;
+    max-width: 720px;
+}
+
+/* Grid de cartões */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.card-opcao {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.card-opcao:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border-color: #d1d5db;
+}
+
+.icone-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+}
+
+.icone-azul {
+    background-color: #eff6ff;
+    color: #0073e6;
+}
+
+.icone-verde {
+    background-color: #ecfdf5;
+    color: #059669;
+}
+
+.icone-vermelho {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.card-opcao h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 10px 0;
+}
+
+.card-opcao p {
+    font-size: 0.92rem;
+    color: #6b7280;
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+    flex-grow: 1;
+}
+
+/* Ações / Botões */
+.btn-acao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-primario {
+    background-color: #0073e6;
+    color: #ffffff;
+}
+
+.btn-primario:hover {
+    background-color: #005bb5;
+}
+
+.btn-secundario {
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.btn-secundario:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+/* Variação de risco para exclusão */
+.card-perigo {
+    border-color: #fee2e2;
+}
+
+.card-perigo:hover {
+    border-color: #fca5a5;
+}
+
+.btn-perigo {
+    background-color: #ffffff;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+}
+
+.btn-perigo:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+}

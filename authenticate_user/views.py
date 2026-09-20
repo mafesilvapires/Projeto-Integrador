@@ -40,6 +40,9 @@ def cadastro(request):
         senha = request.POST.get('senha')
         confirma_senha = request.POST.get('confirma_senha')
 
+        # Captura a escolha opcional do checkbox (True se marcado, False se desmarcado)
+        aceita_comunicacoes = 'comunicacoes' in request.POST
+
         if senha != confirma_senha:
             messages.error(request, 'As senhas não coincidem.')
             return redirect('cadastro')
@@ -52,7 +55,13 @@ def cadastro(request):
 
         secret = pyotp.random_base32()
         secret_cifrado = criptografar_dado(secret)
-        PerfilTOTP.objects.create(user=user, secret=secret_cifrado)
+
+        # Salva o perfil TOTP junto com o consentimento de comunicação
+        PerfilTOTP.objects.create(
+            user=user, 
+            secret=secret_cifrado,
+            aceita_comunicacoes=aceita_comunicacoes
+        )
 
         return redirect('qrcode', username=username)
 
@@ -130,6 +139,16 @@ def plataforma(request):
     return render(request, 'home.html', {
         'user': request.user
     })
+
+@login_required(login_url="/auth/login")
+def atualizar_comunicacoes(request):
+    if request.method == 'POST':
+        perfil = request.user.perfiltotp
+        # Atualiza a preferência: True se a caixa estiver marcada, False se foi desmarcada
+        perfil.aceita_comunicacoes = 'comunicacoes' in request.POST
+        perfil.save()
+        messages.success(request, 'Preferências de comunicação atualizadas com sucesso.')
+    return redirect('plataforma')
 
 
 def logout(request):

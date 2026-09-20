@@ -1,3 +1,5 @@
+/* MODAL PADRÃO DO SISTEMA (Estrutura Existente / SweetAlert2) */
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -54,4 +56,133 @@
 
 .swal2-confirm:focus {
     box-shadow: none !important;
+}
+
+
+/* MODAL DE TERMOS DE USO E PRIVACIDADE (Tag <dialog>) */
+
+/* Fundo escurecido com desfoque */
+.modal-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+}
+
+/* Caixa flutuante centralizada com cantos arredondados */
+.modal-dialog {
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    max-width: 520px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+/* Container flexível para rolagem interna */
+.modal-conteudo {
+    display: flex;
+    flex-direction: column;
+    max-height: 82vh;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+/* Topo do modal com título e botão fechar */
+.modal-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 28px 16px 28px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.modal-cabecalho h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-fechar-modal {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.15s ease;
+    padding: 4px;
+}
+
+.btn-fechar-modal:hover {
+    color: #111827;
+}
+
+/* Texto dos termos com barra de rolagem vertical */
+.modal-corpo {
+    padding: 20px 28px;
+    overflow-y: auto;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4b5563;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+}
+
+.modal-corpo h3 {
+    font-size: 0.96rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 16px 0 6px 0;
+}
+
+.modal-corpo h3:first-child {
+    margin-top: 0;
+}
+
+.modal-corpo p {
+    margin: 0 0 12px 0;
+}
+
+/* Rodapé com botão de confirmação */
+.modal-rodape {
+    padding: 16px 28px 24px 28px;
+    display: flex;
+    justify-content: flex-end;
+    background-color: #ffffff;
+    border-top: 1px solid #f0f2f5;
+}
+
+.modal-rodape {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+}
+
+#aceitar-termos-modal {
+    width: auto;
+    padding: 10px 24px;
+    background-color: #0073e6;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+
+#aceitar-termos-modal:hover {
+    background-color: #005bb5;
 }

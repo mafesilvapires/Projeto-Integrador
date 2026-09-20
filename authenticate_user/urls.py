@@ -11,6 +11,9 @@ urlpatterns = [
     path('plataforma', views.plataforma, name='plataforma'),
     path('logout/', views.logout, name='logout'),
 
+    # Gestão de Consentimento e LGPD
+    path('atualizar-comunicacoes/', views.atualizar_comunicacoes, name='atualizar_comunicacoes'),
+
     # Paths de recuperação de senha (com log - Req 2.6 e 2.7)
     path('password_reset/', views.PasswordResetViewLog.as_view(
         template_name='registration/password_reset_form.html',

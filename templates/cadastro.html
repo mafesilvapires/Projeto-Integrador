@@ -14,10 +14,12 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/components/forms.css' %}">
     <link rel="stylesheet" href="{% static 'css/components/buttons.css' %}">
     <link rel="stylesheet" href="{% static 'css/pages/auth.css' %}">
 </head>
+
 <body>
     <div class="login-container">
         <div class="painel-visual"></div>
@@ -50,8 +52,12 @@
                         <input type="password" id="campo-confirma-senha" placeholder="Confirme sua senha" name="confirma_senha" required>
                     </div>
                     <div class="campo-termos">
-                        <input type="checkbox" id="termos" class="checkbox-termos" required>
-                        <label for="termos">Aceito os <a href="#" class="link-termos">termos e condições</a></label>
+                        <input type="checkbox" id="termos" name="termos_uso" class="checkbox-termos-e-condicoes" required>
+                        <label for="termos">Li e concordo com os <a href="javascript:void(0)" id="abrir-termos" class="link-termos">Termos de Uso e Política de Privacidade.</a></label>
+                    </div>
+                    <div class="campo-comunicacoes">
+                        <input type="checkbox" id="comunicacoes" name="comunicacoes" class="checkbox-termos-e-condicoes">
+                        <label for="comunicacoes">Aceito receber e-mails com novidades, pesquisas pedagógicas e atualizações da plataforma.</label>
                     </div>
                     <button type="submit" class="botao-entrar">Cadastrar</button>
                     <div class="rodape-card">
@@ -61,5 +67,33 @@
             </div>
         </div>
     </div>
+
+    <!-- Puxa o arquivo com os termos modularizado -->
+    {% include 'includes/modal_termos.html' %}
+
+    <script>
+        const modal = document.getElementById('modal-termos');
+        const btnAbrir = document.getElementById('abrir-termos');
+        const btnFechar = document.getElementById('fechar-termos');
+        const btnAceitarModal = document.getElementById('aceitar-termos-modal');
+
+        btnAbrir.addEventListener('click', () => {
+            modal.showModal();
+        });
+
+        btnFechar.addEventListener('click', () => {
+            modal.close();
+        });
+
+        btnAceitarModal.addEventListener('click', () => {
+            modal.close();
+        });
+
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.close();
+            }
+        });
+    </script>
 </body>
 </html>

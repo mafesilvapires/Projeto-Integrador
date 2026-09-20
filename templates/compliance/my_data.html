@@ -1,8 +1,201 @@
-<h1>Meus Dados</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Hub - Meus Dados</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
 
-<p>Usuário: {{ user.username }}</p>
-<p>Email: {{ user.email }}</p>
-<br>
-<p>O TeacherHub se compromete em coletar o mínimo de dados possíveis de seus usuários.
-<br>
-<a href="{% url 'compliance_home' %}">Voltar</a>
+    <!-- CSS Externo -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/my_data.css' %}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-brand">
+            <span>Teacher Hub</span>
+        </div>
+        <div class="topbar-user">
+            <i class="ph ph-user-circle"></i>
+            <span>{{ user.username }}</span>
+        </div>
+    </header>
+
+    <div class="layout-body">
+        <aside class="sidebar">
+            <nav class="sidebar-conteudo">
+                <ul class="nav-lista">
+                    <li>
+                        <a href="{% url 'plataforma' %}" class="nav-item">
+                            <i class="ph ph-squares-four icone-nav"></i>
+                            <span>Início</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'compliance:compliance_home' %}" class="nav-item ativo">
+                            <i class="ph ph-shield-check icone-nav"></i>
+                            <span>Privacidade e Dados</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-rodape">
+                <form action="{% url 'logout' %}" method="post" class="form-logout">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">
+                        <i class="ph ph-sign-out icone-logout"></i>
+                        <span>Fazer Log Out</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="my-data-container">
+                <div class="my-data-cabecalho">
+                    <a href="{% url 'compliance:compliance_home' %}" class="link-voltar">
+                        <i class="ph ph-arrow-left"></i>
+                        <span>Voltar para Privacidade e Dados</span>
+                    </a>
+                    <h1>Meus Dados Cadastrais</h1>
+                    <p class="subtitulo-my-data">Consulte as informações da sua conta e gira as suas autorizações de consentimento.</p>
+                </div>
+
+                {% if messages %}
+                    <ul class="alerta-mensagens">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <!-- Informações do Utilizador -->
+                <section class="painel-seccao">
+                    <h2>
+                        <i class="ph ph-identification-card"></i>
+                        <span>Informações da Conta</span>
+                    </h2>
+                    <div class="dados-grid">
+                        <div class="dado-item">
+                            <label>Professor(a)</label>
+                            <span>{{ user.username }}</span>
+                        </div>
+                        <div class="dado-item">
+                            <label>Endereço de E-mail</label>
+                            <span>{{ user.email|default:"Não informado" }}</span>
+                        </div>
+                        <div class="dado-item">
+                            <label>Data de Registo</label>
+                            <span>{{ user.date_joined|date:"d/m/Y H:i" }}</span>
+                        </div>
+                        <div class="dado-item">
+                            <label>Segurança (2FA)</label>
+                            <div>
+                                {% if perfil %}
+                                    <span class="badge-status badge-ativo">
+                                        <i class="ph ph-check-circle"></i> Ativado
+                                    </span>
+                                {% else %}
+                                    <span class="badge-status badge-inativo">
+                                        <i class="ph ph-x-circle"></i> Inativo
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Termos e Preferências -->
+                <section class="painel-seccao">
+                    <h2>
+                        <i class="ph ph-article"></i>
+                        <span>Termos e Consentimentos</span>
+                    </h2>
+
+                    <!-- Termos Obrigatórios -->
+                    <div class="consentimento-item">
+                        <div class="consentimento-checkbox">
+                            <input type="checkbox" id="termos_obrigatorios" checked disabled>
+                            <div class="consentimento-texto">
+                                <strong>Termos de Uso e Política de Privacidade</strong>
+                                <p>Aceitação mandatória no ato de criação da conta em {{ user.date_joined|date:"d/m/Y" }}.</p>
+                            </div>
+                        </div>
+                        <button type="button" id="abrir-termos" class="btn-visualizar">
+                            <i class="ph ph-eye"></i> Visualizar Termos
+                        </button>
+                    </div>
+
+                    <!-- Comunicações Opcionais -->
+                    <form method="post" action="{% url 'compliance:my_data' %}">
+                        {% csrf_token %}
+                        <div class="consentimento-item">
+                            <div class="consentimento-checkbox">
+                                <input type="checkbox" 
+                                       id="comunicacoes" 
+                                       name="comunicacoes" 
+                                       {% if perfil and perfil.aceita_comunicacoes %}checked{% endif %}>
+                                <div class="consentimento-texto">
+                                    <strong>Comunicações e Atualizações Pedagógicas</strong>
+                                    <p>Receber comunicados institucionais, pesquisas metodológicas e novidades da plataforma via e-mail.</p>
+                                    {% if perfil and perfil.data_consentimento %}
+                                        <small><i class="ph ph-clock"></i> Última atualização em {{ perfil.data_consentimento|date:"d/m/Y H:i" }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-salvar">
+                            Atualizar Preferências
+                        </button>
+                    </form>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal com os termos -->
+    {% include 'includes/modal_termos.html' %}
+
+    <script>
+        const modal = document.getElementById('modal-termos');
+        const btnAbrir = document.getElementById('abrir-termos');
+        const btnFechar = document.getElementById('fechar-termos');
+        const btnAceitarModal = document.getElementById('aceitar-termos-modal');
+
+        if (btnAbrir && modal) {
+            btnAbrir.addEventListener('click', () => {
+                modal.showModal();
+            });
+        }
+
+        if (btnFechar && modal) {
+            btnFechar.addEventListener('click', () => {
+                modal.close();
+            });
+        }
+
+        if (btnAceitarModal && modal) {
+            btnAceitarModal.addEventListener('click', () => {
+                modal.close();
+            });
+        }
+
+        if (modal) {
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.close();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

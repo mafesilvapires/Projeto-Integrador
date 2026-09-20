@@ -21,16 +21,24 @@
     margin-right: 12px;
 }
 
-.campo-termos {
+.campo-termos,
+.campo-comunicacoes {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     padding-left: 4px;
+    text-align: left;
 }
 
-.campo-termos label {
+.campo-comunicacoes {
+    margin-bottom: 24px;
+}
+
+.campo-termos label,
+.campo-comunicacoes label {
     font-size: 12px;
+    line-height: 1.4;
     color: #4a4a4a;
     cursor: pointer;
 }
@@ -41,9 +49,11 @@
     font-weight: 500;
 }
 
-.checkbox-termos {
+.checkbox-termos-e-condicoes {
     cursor: pointer;
     accent-color: #0073e6;
+    margin-top: 2px;
+    flex-shrink: 0;
 }
 
 .grupo-pin {

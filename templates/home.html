@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Hub - Home</title>
+    <title>Teacher Hub - Painel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,10 +16,35 @@
     <link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
 </head>
 <body>
-    <header class="topbar"></header>
+    <header class="topbar">
+        <div class="topbar-brand">
+            <span>Teacher Hub</span>
+        </div>
+        <div class="topbar-user">
+            <i class="ph ph-user-circle"></i>
+            <span>{{ user.username }}</span>
+        </div>
+    </header>
+
     <div class="layout-body">
         <aside class="sidebar">
-            <div class="sidebar-conteudo"></div>
+            <nav class="sidebar-conteudo">
+                <ul class="nav-lista">
+                    <li>
+                        <a href="{% url 'plataforma' %}" class="nav-item ativo">
+                            <i class="ph ph-squares-four icone-nav"></i>
+                            <span>Início</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'compliance:compliance_home' %}" class="nav-item">
+                            <i class="ph ph-shield-check icone-nav"></i>
+                            <span>Privacidade e Dados</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
             <div class="sidebar-rodape">
                 <form action="{% url 'logout' %}" method="post" class="form-logout">
                     {% csrf_token %}
@@ -30,18 +55,12 @@
                 </form>
             </div>
         </aside>
+
         <main class="main-content">
             <div class="card-boas-vindas">
                 <h1>Área Autenticada</h1>
                 <p class="saudacao">Olá, <strong>{{ user.username }}</strong></p>
-                <p class="status-autenticado">Você foi autenticado.</p>
-                <br>
-                <br>
-                <form action="{% url 'compliance_home' %}" method="get" class="form-compliance">
-                    <button type="submit" class="btn-compliance">
-                        <span>Meus Dados</span>
-                    </button>
-                </form>
+                <p class="status-autenticado">Sessão iniciada com sucesso na plataforma.</p>
             </div>
         </main>
     </div>
