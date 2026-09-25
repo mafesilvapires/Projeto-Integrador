@@ -170,6 +170,7 @@ LOGGING = {
         "padrao":{
             'format': '{asctime} {levelname} {message}',
             'style': '{',
+            'datefmt': '%d/%m/%Y %H:%M:%S',
         },
     },
     'handlers':{
@@ -177,6 +178,8 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'logs' / 'acesso.log',
+            'formatter': 'padrao',
+            'encoding': 'utf-8',
         },
     },
     'loggers':{

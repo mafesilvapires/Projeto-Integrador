@@ -128,9 +128,11 @@ def verificar_2fa(request):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth_login(request, user)
             del request.session['pre_2fa_user_id']
+            logger.info(f"MFA Aprovado - usuario: {user.username} - IP: {request.META.get('REMOTE_ADDR')}")
             return redirect("plataforma")
         else:
             messages.error(request, 'Código de verificação incorreto ou expirado.')
+            logger.info(f"Falha de MFA: Código expirado ou incorreto - usuario: {user.username} - IP: {request.META.get('REMOTE_ADDR')}")
             return redirect('verificar_2fa')
 
 
@@ -152,6 +154,8 @@ def atualizar_comunicacoes(request):
 
 
 def logout(request):
+    username = request.user.username if request.user.is_authenticated else 'Anonimo'
     auth_logout(request)
     messages.info(request, "Você foi desconectado com sucesso.")
+    logger.info(f"logout - usuario: {username} - IP: {request.META.get('REMOTE_ADDR')}")
     return redirect('login')
