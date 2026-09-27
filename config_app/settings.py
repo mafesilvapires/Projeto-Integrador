@@ -191,6 +191,14 @@ LOGGING = {
     },
 }
 
+# Configurando a Integridade de Logs
+LOG_INTEGRITY_KEY = os.getenv('LOG_INTEGRITY_KEY')
+
+if not LOG_INTEGRITY_KEY:
+    raise RuntimeError(
+            'LOG_INTEGRITY_KEY não foi configurado.'
+            )
+
 
 # Definindo URL de Login
 LOGIN_URL = 'login'
