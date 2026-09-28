@@ -11,23 +11,48 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib import messages
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
 from .crypto import criptografar_dado, descriptografar_dado
+from .log_integrity import event_register
 
 logger = logging.getLogger('authenticate_user')
 
 class PasswordResetViewLog(PasswordResetView):
     def form_valid(self, form):
         email = form.cleaned_data.get('email')
-        logger.info(f"Solicitacao de recuperacao de senha - email: {email} - IP: {self.request.META.get('REMOTE_ADDR')}")
+        ip = self.request.META.get('REMOTE_ADDR')
+        logger.info(f"Solicitacao de recuperacao de senha - email: {email} - IP: {ip}")
+        event_register(
+                "SOLICITACAO_RECUPERACAO_SENHA",
+                {
+                    "user": email,
+                    "ip": ip
+                }
+            )
         return super().form_valid(form)
 
 
 class PasswordResetConfirmViewLog(PasswordResetConfirmView):
     def form_valid(self, form):
-        logger.info(f"Redefinicao de senha concluida com sucesso - usuario: {form.user.username} - IP: {self.request.META.get('REMOTE_ADDR')}")
+
+        ip = request.META.get('REMOTE_ADDR')
+        logger.info(f"Redefinicao de senha concluida com sucesso - usuario: {form.user.username} - IP: {ip}")
+        event_register(
+                "REDEFINICAO_DE_SENHA_SUCEDIDA",
+                {
+                    "user": form.user.username,
+                    "ip": ip
+                    }
+                )
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        logger.warning(f"Tentativa de redefinicao de senha invalida - IP: {self.request.META.get('REMOTE_ADDR')}")
+        ip = request.META.get('REMOTE_ADDR')
+        logger.warning(f"Tentativa de redefinicao de senha invalida - IP: {ip}")
+        event_register(
+                "REDEFINICAO_SENHA_FALHA",
+                {
+                    "ip": ip
+                    }
+                )
         return super().form_invalid(form)
 
 
@@ -94,11 +119,27 @@ def login(request):
         user = authenticate(request, username=username, password=senha)
 
         if user:
-            logger.info(f"login - usuario: {username} - IP: {request.META.get('REMOTE_ADDR')}")
+            ip = request.META.get('REMOTE_ADDR')
+            logger.info(f"login - usuario: {username} - IP: {ip}")
+            event_register(
+                    'LOGIN',
+                    {
+                        "user": username,
+                        "ip": ip
+                        }
+                    )
             request.session['pre_2fa_user_id'] = user.id
             return redirect('verificar_2fa')
         else:
-            logger.warning(f"tentativa falha de acesso - usuario: {username} - IP: {request.META.get('REMOTE_ADDR')}")
+            ip = request.META.get('REMOTE_ADDR')
+            logger.warning(f"tentativa falha de acesso - usuario: {username} - IP: {ip}")
+            event_register(
+                    "LOGIN FALHA",
+                    {
+                        "user": username,
+                        "ip": ip
+                        }
+                    )
             messages.error(request, 'E-mail ou senha inválidos.')
             return redirect('login') 
 
@@ -128,9 +169,27 @@ def verificar_2fa(request):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth_login(request, user)
             del request.session['pre_2fa_user_id']
+            ip = request.META.get("REMOTE_ADDR")
+            logger.info(f"MFA Aprovado - usuario: {user.username} - IP: {ip}")
+            event_register(
+                    "MFA APROVADO",
+                    {
+                        "user": user.username,
+                        "ip": ip
+                        }
+                    )
             return redirect("plataforma")
         else:
             messages.error(request, 'Código de verificação incorreto ou expirado.')
+            ip = request.META.get('REMOTE_ADDR')
+            logger.info(f"Falha de MFA: Código expirado ou incorreto - usuario: {user.username} - IP: {ip}")
+            event_register(
+                    "MFA FALHA",
+                    {
+                        "user": user.username,
+                        "ip": ip
+                        }
+                    )
             return redirect('verificar_2fa')
 
 
@@ -152,6 +211,16 @@ def atualizar_comunicacoes(request):
 
 
 def logout(request):
+    username = request.user.username if request.user.is_authenticated else 'Anonimo'
     auth_logout(request)
     messages.info(request, "Você foi desconectado com sucesso.")
+    ip = request.META.get('REMOTE_ADDR')
+    logger.info(f"logout - usuario: {username} - IP: {ip}")
+    event_register(
+            "LOGOUT",
+            {
+                "user": username,
+                "ip": ip
+                }
+            )
     return redirect('login')

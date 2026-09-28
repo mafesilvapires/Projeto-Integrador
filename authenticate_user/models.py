@@ -12,3 +12,17 @@ class PerfilTOTP(models.Model):
 
     def __str__(self):
         return f"2FA & Perfil de {self.user.username}"
+
+
+class IntegridadeLog(models.Model):
+    timestamp = models.DateTimeField()
+    event = models.CharField(max_length=100)
+    data = models.TextField()
+    previous_hash = models.CharField(max_length=64)
+    actual_hash = models.CharField(max_length=64, unique=True)
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        return f"{self.id} - {self.event}"
