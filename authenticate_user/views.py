@@ -33,7 +33,7 @@ class PasswordResetViewLog(PasswordResetView):
 class PasswordResetConfirmViewLog(PasswordResetConfirmView):
     def form_valid(self, form):
 
-        ip = request.META.get('REMOTE_ADDR')
+        ip = self.request.META.get('REMOTE_ADDR')
         logger.info(f"Redefinicao de senha concluida com sucesso - usuario: {form.user.username} - IP: {ip}")
         event_register(
                 "REDEFINICAO_DE_SENHA_SUCEDIDA",
@@ -45,7 +45,7 @@ class PasswordResetConfirmViewLog(PasswordResetConfirmView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        ip = request.META.get('REMOTE_ADDR')
+        ip = self.request.META.get('REMOTE_ADDR')
         logger.warning(f"Tentativa de redefinicao de senha invalida - IP: {ip}")
         event_register(
                 "REDEFINICAO_SENHA_FALHA",
@@ -61,7 +61,7 @@ def cadastro(request):
         return render(request, 'cadastro.html')
     else:   
         username = request.POST.get('username')
-        email = request.POST.get('email')
+        email = request.POST.get('email', '').strip().lower()
         senha = request.POST.get('senha')
         confirma_senha = request.POST.get('confirma_senha')
 
@@ -74,6 +74,10 @@ def cadastro(request):
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Este usuário já está cadastrado.')
+            return redirect('cadastro')
+
+        if User.objects.filter(email__iexact=email).exists():
+            messages.error(request, 'Este E-mail já foi cadastrado na plataforma.')
             return redirect('cadastro')
 
         user = User.objects.create_user(username=username, email=email, password=senha)
@@ -113,35 +117,42 @@ def qrcode_2fa(request, username):
 def login(request):
     if request.method == "GET":
         return render(request, 'login.html')
-    else:
-        username = request.POST.get('username')
-        senha = request.POST.get('senha')
-        user = authenticate(request, username=username, password=senha)
 
-        if user:
-            ip = request.META.get('REMOTE_ADDR')
-            logger.info(f"login - usuario: {username} - IP: {ip}")
-            event_register(
-                    'LOGIN',
-                    {
-                        "user": username,
-                        "ip": ip
-                        }
-                    )
-            request.session['pre_2fa_user_id'] = user.id
-            return redirect('verificar_2fa')
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-            logger.warning(f"tentativa falha de acesso - usuario: {username} - IP: {ip}")
-            event_register(
-                    "LOGIN FALHA",
-                    {
-                        "user": username,
-                        "ip": ip
-                        }
-                    )
-            messages.error(request, 'E-mail ou senha inválidos.')
-            return redirect('login') 
+    email = request.POST.get('email', '').strip().lower()
+    senha = request.POST.get('senha')
+
+    try:
+        user = User.objects.get(email__iexact=email)
+    except User.DoesNotExist:
+        user = None
+
+    if user:
+        user = authenticate(request, username=user.username, password=senha)
+
+    if user:
+        ip = request.META.get('REMOTE_ADDR')
+        logger.info(f"login - usuario: {email} - IP: {ip}")
+        event_register(
+                'LOGIN',
+                {
+                    "user": email,
+                    "ip": ip
+                    }
+                )
+        request.session['pre_2fa_user_id'] = user.id
+        return redirect('verificar_2fa')
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+        logger.warning(f"tentativa falha de acesso - usuario: {email} - IP: {ip}")
+        event_register(
+                "LOGIN FALHA",
+                {
+                    "user": email,
+                    "ip": ip
+                    }
+                )
+        messages.error(request, 'E-mail ou senha inválidos.')
+        return redirect('login') 
 
 
 def verificar_2fa(request):
