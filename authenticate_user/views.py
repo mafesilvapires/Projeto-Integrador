@@ -6,6 +6,7 @@ import qrcode
 import io
 import base64
 import logging
+import uuid
 from .models import PerfilTOTP
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
@@ -60,7 +61,7 @@ def cadastro(request):
     if request.method == "GET":
         return render(request, 'cadastro.html')
     else:   
-        username = request.POST.get('username')
+        nome_completo = request.POST.get('nome_completo')
         email = request.POST.get('email', '').strip().lower()
         senha = request.POST.get('senha')
         confirma_senha = request.POST.get('confirma_senha')
@@ -72,15 +73,19 @@ def cadastro(request):
             messages.error(request, 'As senhas não coincidem.')
             return redirect('cadastro')
 
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Este usuário já está cadastrado.')
-            return redirect('cadastro')
-
+        # Validação de unicidade apenas pelo e-mail
         if User.objects.filter(email__iexact=email).exists():
             messages.error(request, 'Este E-mail já foi cadastrado na plataforma.')
             return redirect('cadastro')
 
-        user = User.objects.create_user(username=username, email=email, password=senha)
+        # Gera o identificador único para o username e armazena o nome completo em first_name
+        uuid_tecnico = uuid.uuid4().hex[:30]
+        user = User.objects.create_user(
+            username=uuid_tecnico,
+            email=email,
+            password=senha,
+            first_name=nome_completo
+        )
 
         secret = pyotp.random_base32()
         secret_cifrado = criptografar_dado(secret)
@@ -92,7 +97,7 @@ def cadastro(request):
             aceita_comunicacoes=aceita_comunicacoes
         )
 
-        return redirect('qrcode', username=username)
+        return redirect('qrcode', username=user.username)
 
 
 def qrcode_2fa(request, username):
@@ -104,7 +109,7 @@ def qrcode_2fa(request, username):
         return redirect('login')
 
     secret_puro = descriptografar_dado(perfil.secret)
-    uri = pyotp.totp.TOTP(secret_puro).provisioning_uri(name=user.username, issuer_name="Teacher Hub")
+    uri = pyotp.totp.TOTP(secret_puro).provisioning_uri(name=user.email, issuer_name="Teacher Hub")
 
     img = qrcode.make(uri)
     buffer = io.BytesIO()

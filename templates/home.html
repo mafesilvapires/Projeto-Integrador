@@ -22,7 +22,7 @@
         </div>
         <div class="topbar-user">
             <i class="ph ph-user-circle"></i>
-            <span>{{ user.username }}</span>
+            <span>{{ user.first_name|truncatewords:2|cut:"..."|default:user.email }}</span>
         </div>
     </header>
 
@@ -59,7 +59,7 @@
         <main class="main-content">
             <div class="card-boas-vindas">
                 <h1>Área Autenticada</h1>
-                <p class="saudacao">Olá, <strong>{{ user.username }}</strong></p>
+                <p class="saudacao">Olá, <strong>{{ user.first_name|truncatewords:2|cut:"..."|default:user.email }}</strong></p>
                 <p class="status-autenticado">Sessão iniciada com sucesso na plataforma.</p>
             </div>
         </main>
