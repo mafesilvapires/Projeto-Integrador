@@ -34,11 +34,11 @@ class PasswordResetConfirmViewLog(PasswordResetConfirmView):
     def form_valid(self, form):
 
         ip = self.request.META.get('REMOTE_ADDR')
-        logger.info(f"Redefinicao de senha concluida com sucesso - usuario: {form.user.username} - IP: {ip}")
+        logger.info(f"Redefinicao de senha concluida com sucesso - usuario: {form.user.email} - IP: {ip}")
         event_register(
                 "REDEFINICAO_DE_SENHA_SUCEDIDA",
                 {
-                    "user": form.user.username,
+                    "user": form.user.email,
                     "ip": ip
                     }
                 )
@@ -145,7 +145,7 @@ def login(request):
         ip = request.META.get('REMOTE_ADDR')
         logger.warning(f"tentativa falha de acesso - usuario: {email} - IP: {ip}")
         event_register(
-                "LOGIN FALHA",
+                "LOGIN_FALHA",
                 {
                     "user": email,
                     "ip": ip
@@ -181,11 +181,11 @@ def verificar_2fa(request):
             auth_login(request, user)
             del request.session['pre_2fa_user_id']
             ip = request.META.get("REMOTE_ADDR")
-            logger.info(f"MFA Aprovado - usuario: {user.username} - IP: {ip}")
+            logger.info(f"MFA Aprovado - usuario: {user.email} - IP: {ip}")
             event_register(
-                    "MFA APROVADO",
+                    "MFA_APROVADO",
                     {
-                        "user": user.username,
+                        "user": user.email,
                         "ip": ip
                         }
                     )
@@ -193,11 +193,11 @@ def verificar_2fa(request):
         else:
             messages.error(request, 'Código de verificação incorreto ou expirado.')
             ip = request.META.get('REMOTE_ADDR')
-            logger.info(f"Falha de MFA: Código expirado ou incorreto - usuario: {user.username} - IP: {ip}")
+            logger.info(f"Falha de MFA: Código expirado ou incorreto - usuario: {user.email} - IP: {ip}")
             event_register(
-                    "MFA FALHA",
+                    "MFA_FALHA",
                     {
-                        "user": user.username,
+                        "user": user.email,
                         "ip": ip
                         }
                     )
@@ -222,16 +222,16 @@ def atualizar_comunicacoes(request):
 
 
 def logout(request):
-    username = request.user.username if request.user.is_authenticated else 'Anonimo'
-    auth_logout(request)
-    messages.info(request, "Você foi desconectado com sucesso.")
+    email = request.user.email if request.user.is_authenticated else 'Anonimo'
     ip = request.META.get('REMOTE_ADDR')
-    logger.info(f"logout - usuario: {username} - IP: {ip}")
+    logger.info(f"logout - usuario: {email} - IP: {ip}")
     event_register(
             "LOGOUT",
             {
-                "user": username,
+                "user": email,
                 "ip": ip
                 }
             )
+    auth_logout(request)
+    messages.info(request, "Você foi desconectado com sucesso.")
     return redirect('login')
