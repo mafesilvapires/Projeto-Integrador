@@ -1,6 +1,6 @@
-
 import hmac
-
+from datetime import timezone as dt_timezone
+from django.utils import timezone
 from django.core.management.base import BaseCommand
 from authenticate_user.models import IntegridadeLog
 from authenticate_user.log_integrity import calculate_hash, GENESIS_HASH
@@ -45,9 +45,15 @@ class Command(BaseCommand):
 
                 return
 
+            ts = registro.timestamp
+            if timezone.is_naive(ts):
+                ts = timezone.make_aware(ts, dt_timezone.utc)
+
             calculated_hash = calculate_hash(
+                ts,
+                registro.event,
                 registro.data,
-                previous_hash
+                registro.previous_hash
             )
 
             if not hmac.compare_digest(
