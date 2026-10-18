@@ -34,7 +34,6 @@ Thumbs.db
 # Certificados HTTPS & TLS
 *.key
 *.crt
-*.pem
 cert.crt
 cert.key
 cert.pem
