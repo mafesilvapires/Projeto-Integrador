@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Arquivos estáticos
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -137,6 +138,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -211,7 +213,7 @@ PASSWORD_RESET_TIMEOUT = 3600
 
 # Configurações de comunicação segura (para produção)
 # Verificando o parâmetro que diz se estamos em produção ou desenvolvimento
-IS_PRODUCTION = os.getenv('APP_STATE') == 'production'
+IS_PRODUCTION = os.getenv('APP_STATE') == 'True'
 
 if IS_PRODUCTION:
     # Parâmetros para produção
@@ -220,11 +222,12 @@ if IS_PRODUCTION:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    CSRF_TRUSTED_ORIGINS = ['https://teacherhub-ttff.onrender.com']
     SECURE_HSTS_SECONDS = 3600 # Curto para desenvolvimento com segurança
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True # Terá efeito ao aumentar o SECURE_HSTS_SECONDS para um ano no mínimo
-    DEBUG = True # ATENÇÃO A EQUIPE, mantive o debug True para a produção pois ainda não estamos realizando o deploy, isso permite o funcionamento dos arquivos estáticos, precisamos ajustar isso OBRIGATORIAMENTE no momento do deploy
-    ALLOWED_HOSTS = ['projetointegrador.com', '127.0.0.1', 'localhost']
+    DEBUG = False # ATENÇÃO A EQUIPE, mantive o debug True para a produção pois ainda não estamos realizando o deploy, isso permite o funcionamento dos arquivos estáticos, precisamos ajustar isso OBRIGATORIAMENTE no momento do deploy
+    ALLOWED_HOSTS = ['teacherhub-ttff.onrender.com', 'projetointegrador.com', '127.0.0.1', 'localhost']
 else:
     # Parâmetros durante desenvolvimento
     SECURE_SSL_REDIRECT = False
