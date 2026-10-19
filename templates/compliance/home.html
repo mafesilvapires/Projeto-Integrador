@@ -23,7 +23,7 @@
         </div>
         <div class="topbar-user">
             <i class="ph ph-user-circle"></i>
-            <span>{{ user.username }}</span>
+            <span>{{ user.first_name|default:user.email }}</span>
         </div>
     </header>
 

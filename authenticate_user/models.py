@@ -11,7 +11,7 @@ class PerfilTOTP(models.Model):
     data_atualizacao_consentimento = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"2FA & Perfil de {self.user.username}"
+        return f"2FA & Perfil de {self.user.first_name or self.user.email}"
 
 
 class IntegridadeLog(models.Model):

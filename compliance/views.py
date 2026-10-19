@@ -46,7 +46,7 @@ def export_my_data(request):
     aceita_comunicacoes = "Sim" if perfil and perfil.aceita_comunicacoes else "Não"
 
     writer.writerow(["Nome de Usuário", "Email", "Aceita Comunicações"])
-    writer.writerow([request.user.username, request.user.email, aceita_comunicacoes])
+    writer.writerow([request.user.first_name, request.user.email, aceita_comunicacoes])
 
     return response
 

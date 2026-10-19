@@ -24,7 +24,7 @@
         </div>
         <div class="topbar-user">
             <i class="ph ph-user-circle"></i>
-            <span>{{ user.username }}</span>
+            <span>{{ user.first_name|default:user.email }}</span>
         </div>
     </header>
 
@@ -86,7 +86,7 @@
                     <div class="dados-grid">
                         <div class="dado-item">
                             <label>Professor(a)</label>
-                            <span>{{ user.username }}</span>
+                            <span>{{ user.first_name|default:user.email }}</span>
                         </div>
                         <div class="dado-item">
                             <label>Endereço de E-mail</label>
