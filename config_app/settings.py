@@ -226,7 +226,7 @@ if IS_PRODUCTION:
     SECURE_HSTS_SECONDS = 3600 # Curto para desenvolvimento com segurança
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True # Terá efeito ao aumentar o SECURE_HSTS_SECONDS para um ano no mínimo
-    DEBUG = True # ATENÇÃO A EQUIPE, mantive o debug True para a produção pois ainda não estamos realizando o deploy, isso permite o funcionamento dos arquivos estáticos, precisamos ajustar isso OBRIGATORIAMENTE no momento do deploy
+    DEBUG = False # ATENÇÃO A EQUIPE, mantive o debug True para a produção pois ainda não estamos realizando o deploy, isso permite o funcionamento dos arquivos estáticos, precisamos ajustar isso OBRIGATORIAMENTE no momento do deploy
     ALLOWED_HOSTS = ['teacherhub-ttff.onrender.com', 'projetointegrador.com', '127.0.0.1', 'localhost']
 else:
     # Parâmetros durante desenvolvimento
