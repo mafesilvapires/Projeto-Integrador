@@ -1,0 +1,24 @@
+name: Esteira DevSecOps Avançada
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  bearer-scan:
+    name: Bearer (SAST e dados sensíveis)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Executar Bearer CLI
+        uses: bearer/bearer-action@v2
+        with:
+          severity: critical,high,medium
