@@ -1,3 +1,7 @@
+Igor Thebas Souza Santos
+Maria Fernanda da Silva Pires
+Uriel Erick Menezes de Oliveira
+
 # Teacher Hub
 🟡 Em desenvolvimento
 
