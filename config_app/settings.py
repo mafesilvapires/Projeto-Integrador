@@ -30,7 +30,7 @@ PASSWORD_HASHERS = [
 SECRET_KEY = os.getenv('DJANGO_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('APP_STATE') != 'True'
 
 ALLOWED_HOSTS = []
 
@@ -231,6 +231,6 @@ if IS_PRODUCTION:
 else:
     # Parâmetros durante desenvolvimento
     SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
+    # SESSION_COOKIE_SECURE = False
+    # CSRF_COOKIE_SECURE = False
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']

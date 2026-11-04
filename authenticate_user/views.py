@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 import pyotp
 import qrcode
@@ -13,6 +13,8 @@ from django.contrib import messages
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
 from .crypto import criptografar_dado, descriptografar_dado
 from .log_integrity import event_register
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 logger = logging.getLogger('authenticate_user')
 
@@ -60,7 +62,7 @@ class PasswordResetConfirmViewLog(PasswordResetConfirmView):
 def cadastro(request):
     if request.method == "GET":
         return render(request, 'cadastro.html')
-    else:   
+    else:
         nome_completo = request.POST.get('nome_completo')
         email = request.POST.get('email', '').strip().lower()
         senha = request.POST.get('senha')
@@ -71,6 +73,18 @@ def cadastro(request):
 
         if senha != confirma_senha:
             messages.error(request, 'As senhas não coincidem.')
+            return redirect('cadastro')
+
+        # Valida a senha com as regras definidas em AUTH_PASSWORD_VALIDATORS (settings.py):
+        # tamanho mínimo, senha comum, apenas números e similaridade com nome/e-mail.
+        try:
+            validate_password(
+                senha or '',
+                user=User(email=email, first_name=nome_completo or ''),
+            )
+        except ValidationError as erros:
+            for erro in erros.messages:
+                messages.error(request, erro)
             return redirect('cadastro')
 
         # Validação de unicidade apenas pelo e-mail
@@ -92,7 +106,7 @@ def cadastro(request):
 
         # Salva o perfil TOTP junto com o consentimento de comunicação
         PerfilTOTP.objects.create(
-            user=user, 
+            user=user,
             secret=secret_cifrado,
             aceita_comunicacoes=aceita_comunicacoes
         )
@@ -157,7 +171,7 @@ def login(request):
                     }
                 )
         messages.error(request, 'E-mail ou senha inválidos.')
-        return redirect('login') 
+        return redirect('login')
 
 
 def verificar_2fa(request):
@@ -186,7 +200,7 @@ def verificar_2fa(request):
             auth_login(request, user)
             del request.session['pre_2fa_user_id']
             ip = request.META.get("REMOTE_ADDR")
-            logger.info(f"MFA Aprovado - usuario: {user.email} - IP: {ip}")
+            logger.info(f"MFA Aprovado - usuario_id: {user.id} - IP: {ip}")
             event_register(
                     "MFA_APROVADO",
                     {
@@ -198,7 +212,7 @@ def verificar_2fa(request):
         else:
             messages.error(request, 'Código de verificação incorreto ou expirado.')
             ip = request.META.get('REMOTE_ADDR')
-            logger.info(f"Falha de MFA: Código expirado ou incorreto - usuario: {user.email} - IP: {ip}")
+            logger.info(f"Falha de MFA: Código expirado ou incorreto - usuario_id: {user.id} - IP: {ip}")
             event_register(
                     "MFA_FALHA",
                     {
