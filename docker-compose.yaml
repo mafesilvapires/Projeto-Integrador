@@ -1,0 +1,56 @@
+services:
+
+  db:
+    image: mysql:8.4
+    container_name: dast-mysql
+
+    environment:
+      MYSQL_DATABASE: dast_integrador
+      MYSQL_USER: dast_check
+      MYSQL_PASSWORD: dast_password
+      MYSQL_ROOT_PASSWORD: dast_root_password
+
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - 127.0.0.1
+        - -uroot
+        - -pdast_root_password
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  web:
+    build: .
+    container_name: dast-django
+
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      DJANGO_SETTINGS_MODULE: config_app.settings
+      DB_NAME: dast_integrador
+      DB_USER: dast_check
+      DB_PASSWORD: dast_password
+      DB_HOST: db
+      DB_PORT: 3306
+      DJANGO_SECRET: dast-only-secret-key
+      DJANGO_DEBUG: "False"
+      LOG_INTEGRITY_KEY: dast-only-integrity-key
+      EMAIL_HOST: localhost
+      EMAIL_HOST_PORT: "587"
+      EMAIL_HOST_USER: ""
+      EMAIL_HOST_PASSWORD: ""
+      CHAVE_CRIPTOGRAFIA: "QIuz97NiCyU8skkSoau1dYYLHLtVPDU1Sb3YpCWOhHo="
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+
+    depends_on:
+      db:
+        condition: service_healthy
