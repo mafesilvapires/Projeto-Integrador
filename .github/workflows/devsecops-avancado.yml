@@ -64,3 +64,62 @@ jobs:
       - name: Encerrar containers
         if: always()
         run: docker compose down
+
+
+  trivy-sbom:
+    name: Trivy - Supply Chain Security
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout do projeto
+        uses: actions/checkout@v4
+
+      - name: Gerar SBOM do codigo-fonte
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: cyclonedx
+          output: sbom-source.json
+
+      - name: Construir imagem Docker
+        run: docker build -t teacher-hub:local .
+
+      - name: Gerar SBOM da imagem Docker
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: image
+          image-ref: teacher-hub:local
+          format: cyclonedx
+          output: sbom-image.json
+        
+      - name: Analisar vulnerabilidades do código-fonte
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          exit-code: '0'
+
+      - name: Analisar vulnerabilidades da imagem
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: image
+          image-ref: teacher-hub:local
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          exit-code: '0'
+
+      - name: Upload dos SBOMs
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: |
+            sbom-source.json
+            sbom-image.json
+          if-no-files-found: error
+          retention-days: 30
