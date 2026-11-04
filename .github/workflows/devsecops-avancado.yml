@@ -1,3 +1,4 @@
+
 name: Esteira DevSecOps Avançada
 
 on:
@@ -22,3 +23,44 @@ jobs:
         uses: bearer/bearer-action@v2
         with:
           severity: critical,high,medium
+
+  zap-dast:
+    name: OWASP ZAP (DAST)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Subir aplicação Django e MySQL
+        run: docker compose up -d --build
+
+      - name: Aguardar aplicação ficar disponível
+        run: |
+          echo "Aguardando Django iniciar..."
+
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:8000/ > /dev/null; then
+              echo "Django funcional"
+              exit 0
+            fi
+
+            echo "Aguardando inicialização..."
+            sleep 5
+          done
+
+          echo "Erro: Django não iniciou a tempo."
+          docker compose logs
+          exit 1
+
+      - name: Executar OWASP ZAP Baseline
+        uses: zaproxy/action-baseline@v0.15.0
+        with:
+          target: 'http://127.0.0.1:8000'
+          allow_issue_writing: false
+          fail_action: false
+          cmd_options: '-a'
+
+      - name: Encerrar containers
+        if: always()
+        run: docker compose down
