@@ -84,6 +84,9 @@ jobs:
           scan-ref: .
           format: cyclonedx
           output: sbom-source.json
+          version: 'v0.70.0'
+        env:
+          TRIVY_SKIP_DB_UPDATE: 'true'
 
       - name: Construir imagem Docker
         run: docker build -t teacher-hub:local .
