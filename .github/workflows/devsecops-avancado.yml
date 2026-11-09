@@ -123,6 +123,27 @@ jobs:
           name: sbom-cyclonedx
           path: |
             sbom-source.json
+
+  trufflehog-secrets:
+    name: TruffleHog - Secret Scanning
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout de credenciais e chaves
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Executar TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          version: latest
+          extra_args: --results=verified,unknown
+
             sbom-image.json
           if-no-files-found: error
           retention-days: 30
