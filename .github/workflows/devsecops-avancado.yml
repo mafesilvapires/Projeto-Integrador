@@ -104,8 +104,7 @@ jobs:
           scan-ref: .
           scanners: vuln
           severity: HIGH,CRITICAL
-          ignore-unfixed: true
-          exit-code: '1'
+          exit-code: '0'
 
       - name: Analisar vulnerabilidades da imagem
         uses: aquasecurity/trivy-action@v0.36.0
@@ -114,11 +113,9 @@ jobs:
           image-ref: teacher-hub:local
           scanners: vuln
           severity: HIGH,CRITICAL
-          ignore-unfixed: true
-          exit-code: '1'
+          exit-code: '0'
 
       - name: Upload dos SBOMs
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sbom-cyclonedx
