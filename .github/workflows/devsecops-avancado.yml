@@ -1,4 +1,3 @@
-
 name: Esteira DevSecOps Avançada
 
 on:
@@ -65,7 +64,6 @@ jobs:
         if: always()
         run: docker compose down
 
-
   trivy-sbom:
     name: Trivy - Supply Chain Security
     runs-on: ubuntu-latest
@@ -98,7 +96,7 @@ jobs:
           image-ref: teacher-hub:local
           format: cyclonedx
           output: sbom-image.json
-        
+
       - name: Analisar vulnerabilidades do código-fonte
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -106,7 +104,8 @@ jobs:
           scan-ref: .
           scanners: vuln
           severity: HIGH,CRITICAL
-          exit-code: '0'
+          ignore-unfixed: true
+          exit-code: '1'
 
       - name: Analisar vulnerabilidades da imagem
         uses: aquasecurity/trivy-action@v0.36.0
@@ -115,9 +114,11 @@ jobs:
           image-ref: teacher-hub:local
           scanners: vuln
           severity: HIGH,CRITICAL
-          exit-code: '0'
+          ignore-unfixed: true
+          exit-code: '1'
 
       - name: Upload dos SBOMs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sbom-cyclonedx
@@ -146,3 +147,27 @@ jobs:
         with:
           version: latest
           extra_args: --results=verified,unknown
+
+  codeql-sast:
+    name: CodeQL - SAST
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Inicializar CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: python
+          queries: security-extended
+
+      - name: Analisar com CodeQL
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:python"
