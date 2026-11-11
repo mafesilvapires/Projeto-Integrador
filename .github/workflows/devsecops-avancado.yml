@@ -168,3 +168,53 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:python"
+
+      trivy-vuln-scan:
+    name: Trivy - Vulnerabilidades em bibliotecas
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout do projeto
+        uses: actions/checkout@v4
+
+      - name: Varredura de dependências e segredos (código-fonte)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          format: table
+          output: trivy-fs-report.txt
+          exit-code: '0'
+
+      - name: Construir imagem Docker
+        run: docker build -t teacher-hub:local .
+
+      - name: Varredura de vulnerabilidades (imagem Docker)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: image
+          image-ref: teacher-hub:local
+          scanners: vuln
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          format: table
+          output: trivy-image-report.txt
+          exit-code: '0'
+
+      - name: Publicar relatórios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-vuln-reports
+          path: |
+            trivy-fs-report.txt
+            trivy-image-report.txt
+          if-no-files-found: warn
+          retention-days: 30 
+    
