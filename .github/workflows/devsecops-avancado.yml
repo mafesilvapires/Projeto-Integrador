@@ -97,24 +97,6 @@ jobs:
           format: cyclonedx
           output: sbom-image.json
 
-      - name: Analisar vulnerabilidades do código-fonte
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: fs
-          scan-ref: .
-          scanners: vuln
-          severity: HIGH,CRITICAL
-          exit-code: '0'
-
-      - name: Analisar vulnerabilidades da imagem
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: image
-          image-ref: teacher-hub:local
-          scanners: vuln
-          severity: HIGH,CRITICAL
-          exit-code: '0'
-
       - name: Upload dos SBOMs
         uses: actions/upload-artifact@v4
         with:
@@ -180,32 +162,33 @@ jobs:
       - name: Checkout do projeto
         uses: actions/checkout@v4
 
+      - name: Construir imagem Docker
+        run: docker build -t teacher-hub:local .
+
       - name: Varredura de dependências e segredos (código-fonte)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
           scanners: vuln,secret
-          severity: CRITICAL,HIGH
+          severity: CRITICAL
           ignore-unfixed: true
           format: table
           output: trivy-fs-report.txt
-          exit-code: '0'
-
-      - name: Construir imagem Docker
-        run: docker build -t teacher-hub:local .
+          exit-code: '1'
 
       - name: Varredura de vulnerabilidades (imagem Docker)
+        if: always()
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: image
           image-ref: teacher-hub:local
           scanners: vuln
-          severity: CRITICAL,HIGH
+          severity: CRITICAL
           ignore-unfixed: true
           format: table
           output: trivy-image-report.txt
-          exit-code: '0'
+          exit-code: '1'
 
       - name: Publicar relatórios
         if: always()
