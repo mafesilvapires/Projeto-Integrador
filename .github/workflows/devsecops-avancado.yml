@@ -169,7 +169,7 @@ jobs:
         with:
           category: "/language:python"
 
-      trivy-vuln-scan:
+    trivy-vuln-scan:
     name: Trivy - Vulnerabilidades em bibliotecas
     runs-on: ubuntu-latest
 
@@ -216,5 +216,4 @@ jobs:
             trivy-fs-report.txt
             trivy-image-report.txt
           if-no-files-found: warn
-          retention-days: 30 
-    
+          retention-days: 30
