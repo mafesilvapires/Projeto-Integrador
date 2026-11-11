@@ -169,7 +169,7 @@ jobs:
         with:
           category: "/language:python"
 
-    trivy-vuln-scan:
+trivy-vuln-scan:
     name: Trivy - Vulnerabilidades em bibliotecas
     runs-on: ubuntu-latest
 
