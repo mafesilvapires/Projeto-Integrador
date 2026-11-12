@@ -22,3 +22,181 @@ jobs:
         uses: bearer/bearer-action@v2
         with:
           severity: critical,high,medium
+
+  zap-dast:
+    name: OWASP ZAP (DAST)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Subir aplicação Django e MySQL
+        run: docker compose up -d --build
+
+      - name: Aguardar aplicação ficar disponível
+        run: |
+          echo "Aguardando Django iniciar..."
+
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:8000/ > /dev/null; then
+              echo "Django funcional"
+              exit 0
+            fi
+
+            echo "Aguardando inicialização..."
+            sleep 5
+          done
+
+          echo "Erro: Django não iniciou a tempo."
+          docker compose logs
+          exit 1
+
+      - name: Executar OWASP ZAP Baseline
+        uses: zaproxy/action-baseline@v0.15.0
+        with:
+          target: 'http://127.0.0.1:8000'
+          allow_issue_writing: false
+          fail_action: false
+          cmd_options: '-a'
+
+      - name: Encerrar containers
+        if: always()
+        run: docker compose down
+
+  trivy-sbom:
+    name: Trivy - Supply Chain Security
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout do projeto
+        uses: actions/checkout@v4
+
+      - name: Gerar SBOM do codigo-fonte
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: cyclonedx
+          output: sbom-source.json
+          version: 'v0.70.0'
+        env:
+          TRIVY_SKIP_DB_UPDATE: 'true'
+
+      - name: Construir imagem Docker
+        run: docker build -t teacher-hub:local .
+
+      - name: Gerar SBOM da imagem Docker
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: image
+          image-ref: teacher-hub:local
+          format: cyclonedx
+          output: sbom-image.json
+
+      - name: Upload dos SBOMs
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom-cyclonedx
+          path: |
+            sbom-source.json
+            sbom-image.json
+          if-no-files-found: error
+          retention-days: 30
+
+  trufflehog-secrets:
+    name: TruffleHog - Secret Scanning
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout de credenciais e chaves
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Executar TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          version: latest
+          extra_args: --results=verified,unknown
+
+  codeql-sast:
+    name: CodeQL - SAST
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Inicializar CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: python
+          queries: security-extended
+
+      - name: Analisar com CodeQL
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:python"
+
+  trivy-vuln-scan:
+    name: Trivy - Vulnerabilidades em bibliotecas
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout do projeto
+        uses: actions/checkout@v4
+
+      - name: Construir imagem Docker
+        run: docker build -t teacher-hub:local .
+
+      - name: Varredura de dependências e segredos (código-fonte)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret
+          severity: CRITICAL
+          ignore-unfixed: true
+          format: table
+          output: trivy-fs-report.txt
+          exit-code: '1'
+
+      - name: Varredura de vulnerabilidades (imagem Docker)
+        if: always()
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: image
+          image-ref: teacher-hub:local
+          scanners: vuln
+          severity: CRITICAL
+          ignore-unfixed: true
+          format: table
+          output: trivy-image-report.txt
+          exit-code: '1'
+
+      - name: Publicar relatórios
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: trivy-vuln-reports
+          path: |
+            trivy-fs-report.txt
+            trivy-image-report.txt
+          if-no-files-found: warn
+          retention-days: 30
