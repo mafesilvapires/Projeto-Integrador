@@ -171,7 +171,7 @@ jobs:
           scan-type: fs
           scan-ref: .
           scanners: vuln,secret
-          severity: CRITICAL
+          severity: CRITICAL,HIGH
           ignore-unfixed: true
           format: table
           output: trivy-fs-report.txt
@@ -184,7 +184,7 @@ jobs:
           scan-type: image
           image-ref: teacher-hub:local
           scanners: vuln
-          severity: CRITICAL
+          severity: CRITICAL,HIGH
           ignore-unfixed: true
           format: table
           output: trivy-image-report.txt
