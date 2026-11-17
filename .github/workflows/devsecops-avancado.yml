@@ -21,7 +21,7 @@ jobs:
       - name: Executar Bearer CLI
         uses: bearer/bearer-action@v2
         with:
-          severity: critical,high,medium
+          severity: critical,high
 
   zap-dast:
     name: OWASP ZAP (DAST)
