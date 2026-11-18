@@ -125,12 +125,13 @@ def cadastro(request):
         )
 
         ip = request.META.get('REMOTE_ADDR')
-        logger.info(f"Aceite de termos - usuario_id: {user.id} - versao: {settings.TERMOS_VERSAO} - IP: {ip}")
+        ip_safe = (ip or "").replace('\r', '').replace('\n', '')
+        logger.info(f"Aceite de termos - usuario_id: {user.id} - versao: {settings.TERMOS_VERSAO} - IP: {ip_safe}")
         event_register(
             "ACEITE_TERMOS",
             {
                 "user": email,
-                "ip": ip,
+                "ip": ip_safe,
                 "versao": settings.TERMOS_VERSAO,
             }
         )
