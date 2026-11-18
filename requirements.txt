@@ -14,7 +14,7 @@ PyOTP==2.10.0
 python-decouple==3.8
 python-dotenv==1.2.4
 qrcode==8.2
-sqlparse==0.6.0
+sqlparse==0.6.1
 typing_extensions==4.16.0
 tzdata==2026.6
 Werkzeug==3.1.9
