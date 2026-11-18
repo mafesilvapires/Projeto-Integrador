@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout do código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Executar Bearer CLI
         uses: bearer/bearer-action@v2
@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: Checkout do código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Subir aplicação Django e MySQL
         run: docker compose up -d --build
@@ -73,7 +73,7 @@ jobs:
 
     steps:
       - name: Checkout do projeto
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Gerar SBOM do codigo-fonte
         uses: aquasecurity/trivy-action@v0.36.0
@@ -116,7 +116,7 @@ jobs:
 
     steps:
       - name: Checkout de credenciais e chaves
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -138,7 +138,7 @@ jobs:
 
     steps:
       - name: Checkout do código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Inicializar CodeQL
         uses: github/codeql-action/init@v3
@@ -160,7 +160,7 @@ jobs:
 
     steps:
       - name: Checkout do projeto
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Construir imagem Docker
         run: docker build -t teacher-hub:local .
