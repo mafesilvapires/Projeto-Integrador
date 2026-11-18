@@ -126,7 +126,11 @@
                             <input type="checkbox" id="termos_obrigatorios" checked disabled>
                             <div class="consentimento-texto">
                                 <strong>Termos de Uso e Política de Privacidade</strong>
-                                <p>Aceitação mandatória no ato de criação da conta em {{ user.date_joined|date:"d/m/Y" }}.</p>
+                                {% if perfil.termos_aceitos_em %}
+                                    <p>Versão {{ perfil.termos_versao }} aceita em {{ perfil.termos_aceitos_em|date:"d/m/Y H:i" }}.</p>
+                                {% else %}
+                                    <p>Aceitação mandatória no ato de criação da conta em {{ user.date_joined|date:"d/m/Y" }}.</p>
+                                {% endif %}
                             </div>
                         </div>
                         <button type="button" id="abrir-termos" class="btn-visualizar">

@@ -15,6 +15,8 @@ from .crypto import criptografar_dado, descriptografar_dado
 from .log_integrity import event_register
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.conf import settings
+from django.utils import timezone
 
 logger = logging.getLogger('authenticate_user')
 
@@ -71,6 +73,14 @@ def cadastro(request):
         # Captura a escolha opcional do checkbox (True se marcado, False se desmarcado)
         aceita_comunicacoes = 'comunicacoes' in request.POST
 
+        # Termos de Uso: obrigatório. O 'required' do HTML só barra o navegador;
+        # aqui garantimos no servidor, que é onde a regra realmente vale.
+        aceitou_termos = 'termos_uso' in request.POST
+
+        if not aceitou_termos:
+            messages.error(request, 'É necessário aceitar os Termos de Uso e a Política de Privacidade.')
+            return redirect('cadastro')
+
         if senha != confirma_senha:
             messages.error(request, 'As senhas não coincidem.')
             return redirect('cadastro')
@@ -105,10 +115,25 @@ def cadastro(request):
         secret_cifrado = criptografar_dado(secret)
 
         # Salva o perfil TOTP junto com o consentimento de comunicação
+        # e o registro do aceite dos termos (versão + data/hora)
         PerfilTOTP.objects.create(
             user=user,
             secret=secret_cifrado,
-            aceita_comunicacoes=aceita_comunicacoes
+            aceita_comunicacoes=aceita_comunicacoes,
+            termos_versao=settings.TERMOS_VERSAO,
+            termos_aceitos_em=timezone.now(),
+        )
+
+        ip = request.META.get('REMOTE_ADDR')
+        ip_safe = (ip or "").replace('\r', '').replace('\n', '')
+        logger.info(f"Aceite de termos - usuario_id: {user.id} - versao: {settings.TERMOS_VERSAO} - IP: {ip_safe}")
+        event_register(
+            "ACEITE_TERMOS",
+            {
+                "user": email,
+                "ip": ip_safe,
+                "versao": settings.TERMOS_VERSAO,
+            }
         )
 
         return redirect('qrcode', username=user.username)
@@ -196,9 +221,9 @@ def verificar_2fa(request):
         totp = pyotp.TOTP(secret_puro)
 
         if codigo and totp.verify(codigo):
+            request.session.pop('pre_2fa_user_id', None)
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             auth_login(request, user)
-            del request.session['pre_2fa_user_id']
             ip = request.META.get("REMOTE_ADDR")
             logger.info(f"MFA Aprovado - usuario_id: {user.id} - IP: {ip}")
             event_register(
@@ -232,10 +257,17 @@ def plataforma(request):
 @login_required(login_url="/auth/login")
 def atualizar_comunicacoes(request):
     if request.method == 'POST':
-        perfil = request.user.perfiltotp
+        perfil = request.user.perfil_totp          # com underscore (era perfiltotp)
         # Atualiza a preferência: True se a caixa estiver marcada, False se foi desmarcada
         perfil.aceita_comunicacoes = 'comunicacoes' in request.POST
         perfil.save()
+
+        event_register("CONSENTIMENTO_ALTERADO", {
+            "user_id": request.user.id,
+            "aceita_comunicacoes": perfil.aceita_comunicacoes,
+            "ip": request.META.get('REMOTE_ADDR'),
+        })
+
         messages.success(request, 'Preferências de comunicação atualizadas com sucesso.')
     return redirect('plataforma')
 
