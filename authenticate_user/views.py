@@ -136,12 +136,20 @@ def cadastro(request):
             }
         )
 
+        request.session['setup_2fa_user_id'] = user.id
+
         return redirect('qrcode', username=user.username)
 
 
 def qrcode_2fa(request, username):
+
+    user_id = request.session.get('setup_2fa_user_id')
+    if not user_id:
+        messages.error(request, 'Acesso não autorizado')
+        return redirect('login')
+
     try:
-        user = User.objects.get(username=username)
+        user = User.objects.get(id = user_id, username=username)
         perfil = PerfilTOTP.objects.get(user=user)
     except (User.DoesNotExist, PerfilTOTP.DoesNotExist):
         messages.error(request, 'Usuário não encontrado.')
