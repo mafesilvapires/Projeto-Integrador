@@ -127,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'pt-br'
 USE_I18N = True
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -210,6 +210,11 @@ LOGOUT_REDIRECT_URL = "login"
 #Parâmetros de site e token de redefinição
 SITE_ID = 1
 PASSWORD_RESET_TIMEOUT = 3600
+
+# Versão vigente dos Termos de Uso e Política de Privacidade.
+# Deve ser igual à versão exibida em templates/includes/modal_termos.html.
+# Ao alterar os termos, atualize aqui: cada aceite grava a versão aceita.
+TERMOS_VERSAO = "1.0"
 
 # Configurações de comunicação segura (para produção)
 # Verificando o parâmetro que diz se estamos em produção ou desenvolvimento

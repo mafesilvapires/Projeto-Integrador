@@ -10,6 +10,10 @@ class PerfilTOTP(models.Model):
     data_consentimento = models.DateTimeField(auto_now_add=True)
     data_atualizacao_consentimento = models.DateTimeField(auto_now=True)
 
+    # Aceite dos Termos de Uso (obrigatório no cadastro)
+    termos_versao = models.CharField(max_length=10, blank=True, default='')
+    termos_aceitos_em = models.DateTimeField(null=True, blank=True)
+
     def __str__(self):
         return f"2FA & Perfil de {self.user.first_name or self.user.email}"
 
