@@ -8,7 +8,7 @@ gunicorn==26.2.0
 MarkupSafe==3.0.4
 pillow==13.0.0
 pycparser==3.12
-PyMySQL==1.2.0
+PyMySQL==1.2.4
 pyOpenSSL==26.4.0
 PyOTP==2.10.0
 python-decouple==3.8
